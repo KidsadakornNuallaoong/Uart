@@ -408,10 +408,38 @@ module tb_Uart_TX_RX;
             $display("Test Passed: Received %b", rx_data_out);
         else
             $display("Test Failed: Received %b", rx_data_out);
+        
+        #960000;
+//        // Send another byte
+//        #(CLK_PERIOD*100);
+//        tx_data_in = 8'b11001100;
+//        tx_start = 1;
+//        #(CLK_PERIOD*2);
+//        tx_start = 0;
 
-        // Send another byte
-        #(CLK_PERIOD*100);
-        tx_data_in = 8'b11001100;
+//        // Wait for data to be received
+//        wait (rx_data_ready);
+
+//        // Check received data
+//        if (rx_data_out == 8'b11001100)
+//            $display("Test Passed: Received %b", rx_data_out);
+//        else
+//            $display("Test Failed: Received %b", rx_data_out);
+
+        // Initialize Inputs 
+        rst = 1;
+        tx_data_in = 0;
+        tx_start = 0;
+
+        // Wait for global reset
+        #(CLK_PERIOD*5);
+        rst = 0;
+
+        // Wait for some time
+        #(CLK_PERIOD*10);
+
+        // Send a byte
+        tx_data_in = 8'hfa;
         tx_start = 1;
         #(CLK_PERIOD*2);
         tx_start = 0;
@@ -420,13 +448,13 @@ module tb_Uart_TX_RX;
         wait (rx_data_ready);
 
         // Check received data
-        if (rx_data_out == 8'b11001100)
+        if (rx_data_out == 8'hfa)
             $display("Test Passed: Received %b", rx_data_out);
         else
             $display("Test Failed: Received %b", rx_data_out);
-
+        
+        #960000;
         // Finish the simulation
-        #100;
         $stop;
     end
 
